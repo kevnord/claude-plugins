@@ -1,0 +1,5 @@
+{
+  "name": "scorecard",
+  "description": "Scored code quality assessment across 10 dimensions with weighted composite scoring and quality gates",
+  "version": "1.0.0"
+}

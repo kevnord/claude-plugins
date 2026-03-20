@@ -1,0 +1,84 @@
+name: Check plugin versions
+
+on:
+  pull_request:
+    branches: [main]
+
+jobs:
+  check-versions:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Check plugin version consistency
+        run: |
+          base="${{ github.event.pull_request.base.sha }}"
+          head="${{ github.event.pull_request.head.sha }}"
+
+          # Find which plugins have changed files
+          changed_plugins=$(git diff --name-only "$base" "$head" \
+            | grep '^plugins/' \
+            | cut -d'/' -f2 \
+            | sort -u)
+
+          if [ -z "$changed_plugins" ]; then
+            echo "No plugin files changed."
+            exit 0
+          fi
+
+          errors=0
+
+          for plugin in $changed_plugins; do
+            echo "Checking plugin: $plugin"
+
+            plugin_json="plugins/$plugin/.claude-plugin/plugin.json"
+            if [ ! -f "$plugin_json" ]; then
+              echo "  ⚠ No plugin.json found at $plugin_json — skipping"
+              continue
+            fi
+
+            # Get version from plugin.json
+            plugin_version=$(jq -r '.version' "$plugin_json")
+
+            # Get version from marketplace.json
+            marketplace_version=$(jq -r --arg name "$plugin" \
+              '.plugins[] | select(.name == $name) | .version' \
+              .claude-plugin/marketplace.json)
+
+            # Get version from README table
+            readme_version=$(grep -oP "\\[$plugin\\].*?\\| \K[0-9]+\.[0-9]+\.[0-9]+" README.md || echo "")
+
+            # Check if version was bumped from base
+            base_version=$(git show "$base:$plugin_json" 2>/dev/null | jq -r '.version' 2>/dev/null || echo "")
+
+            if [ -n "$base_version" ] && [ "$plugin_version" = "$base_version" ]; then
+              echo "  ✗ Plugin '$plugin' has changes but version was not bumped (still $base_version)"
+              errors=$((errors + 1))
+            fi
+
+            # Check consistency across all three files
+            if [ "$plugin_version" != "$marketplace_version" ]; then
+              echo "  ✗ Version mismatch: plugin.json=$plugin_version, marketplace.json=$marketplace_version"
+              errors=$((errors + 1))
+            fi
+
+            if [ -n "$readme_version" ] && [ "$plugin_version" != "$readme_version" ]; then
+              echo "  ✗ Version mismatch: plugin.json=$plugin_version, README.md=$readme_version"
+              errors=$((errors + 1))
+            fi
+
+            if [ $errors -eq 0 ]; then
+              echo "  ✓ Version $plugin_version is consistent and bumped"
+            fi
+          done
+
+          if [ $errors -gt 0 ]; then
+            echo ""
+            echo "Version check failed. Please ensure:"
+            echo "  1. The version is bumped in plugins/<name>/.claude-plugin/plugin.json"
+            echo "  2. The same version is in .claude-plugin/marketplace.json"
+            echo "  3. The same version is in the README.md Plugin Catalog table"
+            exit 1
+          fi

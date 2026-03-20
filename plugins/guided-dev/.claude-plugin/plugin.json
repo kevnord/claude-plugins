@@ -1,0 +1,5 @@
+{
+  "name": "guided-dev",
+  "description": "Structured development workflow with intake, clarification, planning, implementation, verification, and PR creation",
+  "version": "1.0.0"
+}

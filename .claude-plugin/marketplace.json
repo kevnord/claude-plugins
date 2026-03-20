@@ -1,0 +1,39 @@
+{
+  "name": "kevnord-plugins",
+  "owner": {
+    "name": "kevnord"
+  },
+  "metadata": {
+    "description": "A curated marketplace of Claude Code plugins",
+    "version": "1.0.0",
+    "pluginRoot": "./plugins"
+  },
+  "plugins": [
+    {
+      "name": "scorecard",
+      "source": "./plugins/scorecard",
+      "description": "Scored code quality assessment across 10 dimensions with weighted composite scoring and quality gates",
+      "version": "1.0.0",
+      "author": {
+        "name": "kevnord"
+      },
+      "license": "MIT",
+      "category": "code-quality",
+      "keywords": ["scorecard", "quality", "security", "performance", "scoring"],
+      "tags": ["scorecard", "code-quality"]
+    },
+    {
+      "name": "guided-dev",
+      "source": "./plugins/guided-dev",
+      "description": "Structured development workflow with intake, clarification, planning, implementation, verification, and PR creation",
+      "version": "1.0.0",
+      "author": {
+        "name": "kevnord"
+      },
+      "license": "MIT",
+      "category": "workflow",
+      "keywords": ["workflow", "planning", "development", "structured", "intake"],
+      "tags": ["workflow", "dev-process"]
+    }
+  ]
+}

@@ -1,0 +1,5 @@
+{
+  "name": "{{plugin-name}}",
+  "description": "{{description}}",
+  "version": "0.1.0"
+}
