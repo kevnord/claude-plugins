@@ -78,6 +78,17 @@ Phase 7 — PR           Create a pull request with acceptance criteria checklis
 | `intake` | Requirement gathering and acceptance criteria collection |
 | `verify` | Acceptance criteria verification with evidence |
 
+## Artifacts
+
+Each workflow run generates two persistent documents:
+
+| Artifact | Written After | Location |
+|----------|---------------|----------|
+| **ADR** (Architecture Decision Record) | Phase 3 — Design | `docs/adr/NNNN-<slug>.md` |
+| **Acceptance Record** | Phase 6 — Verify | `docs/acceptance/NNNN-<slug>.md` |
+
+The ADR captures the competing architecture options and the user's chosen approach. The acceptance record captures the acceptance criteria with pass/fail status and evidence. Both are included in the Phase 7 PR.
+
 ## How It Works
 
 The `/guided-dev` command acts as an orchestrator that dispatches specialist agents for codebase exploration, architecture design, and code review, while delegating to skills for requirement intake and acceptance verification. Cross-cutting rules enforce consistency:
