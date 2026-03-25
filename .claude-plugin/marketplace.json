@@ -26,7 +26,7 @@
       "name": "guided-dev",
       "source": "./plugins/guided-dev",
       "description": "Agent-powered development workflow with parallel codebase exploration, architecture design, code review, and acceptance criteria verification",
-      "version": "2.0.0",
+      "version": "2.1.0",
       "author": {
         "name": "kevnord"
       },
