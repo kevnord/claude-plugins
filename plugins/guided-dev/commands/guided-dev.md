@@ -294,6 +294,9 @@ Otherwise, create a pull request:
      - Summary of changes
      - Acceptance criteria checklist (with checkmarks for verified items)
      - Testing summary
+     - Artifacts generated (with file paths):
+       - ADR: `docs/adr/NNNN-<slug>.md` (if generated this run)
+       - Acceptance Record: `docs/acceptance/NNNN-<slug>.md` (if generated this run)
 4. Report the PR URL to the user.
 
 ---
@@ -312,6 +315,8 @@ After the final phase, output:
 - **Tests:** <passed/failed/skipped>
 - **Code review:** <passed / N issues fixed / skipped>
 - **PR:** <URL or "skipped">
+- **ADR:** <path or "skipped (resumed past Phase 3)">
+- **Acceptance record:** <path or "skipped (resumed past Phase 6)">
 
 ### Files Changed
 - `<path>` — <brief description of change>
