@@ -248,6 +248,34 @@ If all criteria pass: Announce `"All acceptance criteria verified."` and proceed
 
 If there are failures: The verify skill will present what's wrong and suggest fixes. Allow the verify skill to fix them if the user agrees. Re-verify until all criteria pass or the user accepts the remaining state.
 
+### Generate Acceptance Record
+
+After the verification loop fully resolves (all criteria pass, or the user accepts the remaining state):
+
+1. **Determine sequence number:** Run `ls docs/acceptance/ 2>/dev/null | grep -E '^\d{4}-.*\.md$' | sort -r | head -1 | grep -oE '^\d{4}'` to extract the highest existing sequence number. If the directory doesn't exist or is empty, start at `0001`. Otherwise parse the 4-digit number, add 1, and zero-pad to 4 digits.
+2. **Reuse slug:** Use the same slug derived in Phase 3. If Phase 3 was skipped (e.g., `--resume implement`), derive the slug now from the task description using the same algorithm: lowercase, replace non-alphanumeric characters with hyphens, collapse consecutive hyphens, trim to 50 characters, trim trailing hyphens.
+3. **Create directory:** `mkdir -p docs/acceptance`
+4. **Write acceptance record** to `docs/acceptance/NNNN-<slug>.md` using this format:
+
+    # <Feature Name>
+
+    ## Date
+    YYYY-MM-DD
+
+    ## Task Description
+    <Task description from intake>
+
+    ## Acceptance Criteria
+
+    | # | Criterion | Status | Evidence |
+    |---|-----------|--------|----------|
+    | 1 | <criterion text> | PASS | <file:line, test output, or config reference> |
+    | 2 | <criterion text> | FAIL | <explanation of remaining state> |
+
+Use the *final* verification state after all re-verify cycles — not the first pass. If fixes were applied and re-verified, reflect the post-fix status. If some criteria FAIL and the user accepts the remaining state, write the record with FAIL statuses preserved.
+
+Announce the path of the written acceptance record file, e.g.: `"Acceptance record written to docs/acceptance/0003-add-oauth-support.md"`
+
 ---
 
 ## Phase 7 — PR
