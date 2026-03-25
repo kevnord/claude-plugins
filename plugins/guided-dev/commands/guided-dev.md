@@ -117,6 +117,49 @@ After agents return:
 
 Store the chosen plan for implementation.
 
+### Generate ADR
+
+After the user selects an approach, generate an Architecture Decision Record:
+
+1. **Determine sequence number:** Run `ls docs/adr/ 2>/dev/null | grep -E '^\d{4}-.*\.md$' | sort -r | head -1` to find the highest existing number. If the directory doesn't exist or is empty, start at `0001`. Otherwise increment by 1 and zero-pad to 4 digits.
+2. **Derive slug:** Take the task description from the intake summary. Lowercase it, replace non-alphanumeric characters with hyphens, collapse consecutive hyphens, trim to 50 characters, and trim trailing hyphens. Store this slug — it will be reused for the acceptance record in Phase 6.
+3. **Create directory:** `mkdir -p docs/adr`
+4. **Write ADR** to `docs/adr/NNNN-<slug>.md` using this format:
+
+    # NNNN. <Decision Title>
+
+    ## Status
+    Accepted
+
+    ## Date
+    YYYY-MM-DD
+
+    ## Context
+    <Task description from intake and why a design decision was needed>
+
+    ## Options Considered
+
+    ### Option 1: <Agent's approach name> — Minimal changes
+    <Summary of agent 1's approach and trade-offs>
+
+    ### Option 2: <Agent's approach name> — Clean architecture
+    <Summary of agent 2's approach and trade-offs>
+
+    ### Option 3: <Agent's approach name> — Pragmatic balance (if 3 agents were dispatched)
+    <Summary of agent 3's approach and trade-offs>
+
+    ## Decision
+    <Which option the user chose and their rationale>
+
+    ## Consequences
+    <What becomes easier or harder, from the chosen blueprint's trade-offs>
+
+The philosophy labels ("Minimal changes", "Clean architecture", "Pragmatic balance") come from the dispatch prompts above — the agents do not output these labels themselves. Map agent index to label when generating the ADR.
+
+The ADR is written silently — no additional approval gate. The user already approved the decision.
+
+Announce: `"ADR written to docs/adr/NNNN-<slug>.md"`
+
 ---
 
 ## Phase 4 — Implement
