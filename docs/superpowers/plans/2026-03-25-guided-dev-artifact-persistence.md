@@ -8,18 +8,23 @@
 
 **Spec:** `docs/superpowers/specs/2026-03-25-guided-dev-artifact-persistence-design.md`
 
+**Important notes for implementing agents:**
+- **Line number drift:** Each task modifies the same file. Line numbers in "Modify:" headers reference the *original* file before any changes. Always search for the **anchor text** quoted in each insertion instruction rather than relying on line numbers.
+- **Resume/no-pr behavior:** Artifact generation is inlined within Phase 3 and Phase 6. If `--resume` skips past those phases, artifacts are inherently skipped — no guard clauses needed. If `--no-pr` is used, artifacts are still written since they happen before Phase 7. Do not add conditional logic for these cases.
+- **`--skip-review` independence:** Skipping Phase 5 (review) does not affect Phase 6 (verify) or its acceptance record. They are independent phases.
+
 ---
 
 ### Task 1: Add ADR generation to Phase 3
 
 **Files:**
-- Modify: `plugins/guided-dev/commands/guided-dev.md:95-119` (Phase 3 — Design)
+- Modify: `plugins/guided-dev/commands/guided-dev.md` — Phase 3 (Design) section
 
 - [ ] **Step 1: Add ADR generation instructions after the hard gate**
 
-Insert the following after line 118 (`Store the chosen plan for implementation.`), before the `---` separator:
+Find the line reading `Store the chosen plan for implementation.` in Phase 3. Insert the following content after that line, before the `---` separator that ends Phase 3:
 
-```markdown
+````markdown
 
 ### Generate ADR
 
@@ -30,42 +35,40 @@ After the user selects an approach, generate an Architecture Decision Record:
 3. **Create directory:** `mkdir -p docs/adr`
 4. **Write ADR** to `docs/adr/NNNN-<slug>.md` using this format:
 
-```
-# NNNN. <Decision Title>
+    # NNNN. <Decision Title>
 
-## Status
-Accepted
+    ## Status
+    Accepted
 
-## Date
-YYYY-MM-DD
+    ## Date
+    YYYY-MM-DD
 
-## Context
-<Task description from intake and why a design decision was needed>
+    ## Context
+    <Task description from intake and why a design decision was needed>
 
-## Options Considered
+    ## Options Considered
 
-### Option 1: <Agent's approach name> — Minimal changes
-<Summary of agent 1's approach and trade-offs>
+    ### Option 1: <Agent's approach name> — Minimal changes
+    <Summary of agent 1's approach and trade-offs>
 
-### Option 2: <Agent's approach name> — Clean architecture
-<Summary of agent 2's approach and trade-offs>
+    ### Option 2: <Agent's approach name> — Clean architecture
+    <Summary of agent 2's approach and trade-offs>
 
-### Option 3: <Agent's approach name> — Pragmatic balance (if 3 agents were dispatched)
-<Summary of agent 3's approach and trade-offs>
+    ### Option 3: <Agent's approach name> — Pragmatic balance (if 3 agents were dispatched)
+    <Summary of agent 3's approach and trade-offs>
 
-## Decision
-<Which option the user chose and their rationale>
+    ## Decision
+    <Which option the user chose and their rationale>
 
-## Consequences
-<What becomes easier or harder, from the chosen blueprint's trade-offs>
-```
+    ## Consequences
+    <What becomes easier or harder, from the chosen blueprint's trade-offs>
 
 The philosophy labels ("Minimal changes", "Clean architecture", "Pragmatic balance") come from the dispatch prompts above — the agents do not output these labels themselves. Map agent index to label when generating the ADR.
 
 The ADR is written silently — no additional approval gate. The user already approved the decision.
 
 Announce: `"ADR written to docs/adr/NNNN-<slug>.md"`
-```
+````
 
 - [ ] **Step 2: Verify the edit**
 
@@ -86,13 +89,13 @@ git commit -m "feat(guided-dev): add ADR generation to Phase 3"
 ### Task 2: Add acceptance record generation to Phase 6
 
 **Files:**
-- Modify: `plugins/guided-dev/commands/guided-dev.md:191-207` (Phase 6 — Verify)
+- Modify: `plugins/guided-dev/commands/guided-dev.md` — Phase 6 (Verify) section
 
 - [ ] **Step 1: Add acceptance record generation after verification resolves**
 
-Insert the following after line 206 (`Re-verify until all criteria pass or the user accepts the remaining state.`), before the `---` separator:
+Find the line reading `Re-verify until all criteria pass or the user accepts the remaining state.` in Phase 6. Insert the following content after that line, before the `---` separator that ends Phase 6:
 
-```markdown
+````markdown
 
 ### Generate Acceptance Record
 
@@ -103,27 +106,25 @@ After the verification loop fully resolves (all criteria pass, or the user accep
 3. **Create directory:** `mkdir -p docs/acceptance`
 4. **Write acceptance record** to `docs/acceptance/NNNN-<slug>.md` using this format:
 
-```
-# <Feature Name>
+    # <Feature Name>
 
-## Date
-YYYY-MM-DD
+    ## Date
+    YYYY-MM-DD
 
-## Task Description
-<Task description from intake>
+    ## Task Description
+    <Task description from intake>
 
-## Acceptance Criteria
+    ## Acceptance Criteria
 
-| # | Criterion | Status | Evidence |
-|---|-----------|--------|----------|
-| 1 | <criterion text> | PASS | <file:line, test output, or config reference> |
-| 2 | <criterion text> | FAIL | <explanation of remaining state> |
-```
+    | # | Criterion | Status | Evidence |
+    |---|-----------|--------|----------|
+    | 1 | <criterion text> | PASS | <file:line, test output, or config reference> |
+    | 2 | <criterion text> | FAIL | <explanation of remaining state> |
 
-Use the *final* verification state after all re-verify cycles — not the first pass. If fixes were applied and re-verified, reflect the post-fix status.
+Use the *final* verification state after all re-verify cycles — not the first pass. If fixes were applied and re-verified, reflect the post-fix status. If some criteria FAIL and the user accepts the remaining state, write the record with FAIL statuses preserved.
 
 Announce: `"Acceptance record written to docs/acceptance/NNNN-<slug>.md"`
-```
+````
 
 - [ ] **Step 2: Verify the edit**
 
@@ -144,11 +145,11 @@ git commit -m "feat(guided-dev): add acceptance record generation to Phase 6"
 ### Task 3: Update Phase 7 PR description to include artifacts
 
 **Files:**
-- Modify: `plugins/guided-dev/commands/guided-dev.md:210-227` (Phase 7 — PR)
+- Modify: `plugins/guided-dev/commands/guided-dev.md` — Phase 7 (PR) section
 
 - [ ] **Step 1: Add artifacts section to PR description**
 
-In the PR description bullet list (after `Testing summary` on line 225), add:
+Find the line reading `- Testing summary` in the Phase 7 PR description bullet list. Add after it:
 
 ```markdown
      - Artifacts generated (with file paths):
@@ -168,11 +169,11 @@ git commit -m "feat(guided-dev): include artifacts in Phase 7 PR description"
 ### Task 4: Update Workflow Complete summary to include artifact paths
 
 **Files:**
-- Modify: `plugins/guided-dev/commands/guided-dev.md:230-248` (Workflow Complete)
+- Modify: `plugins/guided-dev/commands/guided-dev.md` — Workflow Complete section
 
 - [ ] **Step 1: Add artifact lines to the summary template**
 
-In the summary block, after `- **PR:** <URL or "skipped">` (line 243), add:
+Find the line reading `- **PR:** <URL or "skipped">` in the Workflow Complete summary block. Add after it:
 
 ```markdown
 - **ADR:** <path or "skipped (resumed past Phase 3)">
@@ -184,7 +185,7 @@ In the summary block, after `- **PR:** <URL or "skipped">` (line 243), add:
 Read the full `plugins/guided-dev/commands/guided-dev.md` end-to-end and confirm:
 - All four insertion points are correct
 - No existing functionality was disrupted
-- The flow reads naturally from Phase 3 → 4 → 5 → 6 → 7 → Complete
+- The flow reads naturally from Phase 3 -> 4 -> 5 -> 6 -> 7 -> Complete
 - Markdown formatting is valid (no broken fences, headers, or lists)
 
 - [ ] **Step 3: Commit**
