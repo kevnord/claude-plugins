@@ -1,5 +1,7 @@
 # Guided Dev
 
+**v2.0.0**
+
 An agent-powered development workflow plugin for Claude Code that guides tasks through codebase exploration, architecture design, implementation, code review, and verification using parallel specialist agents.
 
 ## Quick Start
