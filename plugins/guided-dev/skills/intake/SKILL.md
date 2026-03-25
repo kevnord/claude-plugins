@@ -1,13 +1,13 @@
 ---
 name: intake
-description: Gather task requirements, explore the repository, and produce a structured context summary. Use when starting a new task or gathering requirements for implementation.
+description: Gather task requirements, acceptance criteria, and supporting materials from the user. Use when starting a new task or gathering requirements for implementation.
 ---
 
 # Intake
 
 ## Purpose
 
-Collects the task description, acceptance criteria, and supporting materials from the user, then explores the repository to build a structured context summary. This summary becomes the foundation for all subsequent workflow phases.
+Collects the task description, acceptance criteria, and supporting materials from the user. This summary becomes the foundation for all subsequent workflow phases.
 
 ## Process
 
@@ -57,21 +57,7 @@ Ask the user:
 
 If the user says no or provides materials, acknowledge and proceed.
 
-### 4. Explore the Repository
-
-Perform automated repo discovery:
-
-1. **Directory structure** — Use `Glob` with patterns like `*`, `src/**`, `lib/**`, `app/**` to understand the top-level layout and key directories.
-2. **Config files** — Use `Read` to examine key config files: `package.json`, `tsconfig.json`, `pyproject.toml`, `Cargo.toml`, `go.mod`, `Makefile`, `docker-compose.yml`, `.env.example`, or whatever build/config files exist at the root.
-3. **Recent history** — Run `git log --oneline -20` to see recent commit messages and understand what's been worked on.
-4. **Relevant code** — Based on the task description, use `Glob` and `Grep` to locate files and code patterns that are likely relevant. Read the most important ones.
-5. **Conventions** — Look for:
-   - Existing patterns (naming conventions, file organization, module structure)
-   - Test patterns (test framework, test file locations, naming conventions)
-   - Linting/formatting config (`.eslintrc`, `.prettierrc`, `rustfmt.toml`, etc.)
-   - CI/CD config (`.github/workflows/`, `Jenkinsfile`, etc.)
-
-### 5. Output Structured Summary
+### 4. Output Structured Summary
 
 Produce a summary in this format:
 
@@ -88,21 +74,6 @@ Produce a summary in this format:
 
 ### Supporting Materials
 - <List of files, screenshots, specs provided, or "None provided">
-
-### Repository Context
-- **Tech stack:** <language(s), framework(s), build tool(s)>
-- **Project type:** <web app, API, library, CLI, etc.>
-- **Key conventions:** <naming, structure, patterns observed>
-- **Test setup:** <framework, location, patterns>
-- **CI/CD:** <what's configured>
-
-### Relevant Files
-- `<path>` — <why it's relevant>
-- `<path>` — <why it's relevant>
-- ...
-
-### Recent Activity
-<Brief summary of recent commits relevant to this task>
 ```
 
-This summary is passed to subsequent phases. Make it thorough — the quality of the plan depends on the quality of the intake.
+This summary is passed to subsequent phases.

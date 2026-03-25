@@ -1,8 +1,6 @@
 # Guided Dev
 
-A structured development workflow plugin for Claude Code that guides tasks through intake, clarification, planning, implementation, verification, and PR creation.
-
-![guided-dev infographic](infographic.png)
+An agent-powered development workflow plugin for Claude Code that guides tasks through codebase exploration, architecture design, implementation, code review, and verification using parallel specialist agents.
 
 ## Quick Start
 
@@ -19,14 +17,19 @@ Or with an inline task description:
 ## Phases
 
 ```
-Phase 1   — Intake        Gather requirements, explore the repo
-Phase 2   — Clarify       Ask targeted clarifying questions (one at a time)
-Phase 3   — Plan          Generate 3 implementation options (Minimal / Balanced / Comprehensive)
-Phase 4   — Implement     Execute the chosen plan, write and run tests
-Phase 5   — Verify        Check each acceptance criterion with evidence
-Phase 5.5 — Quality Gate  Scorecard audit of changed files (opt-in, --scorecard)
-Phase 6   — PR            Create a pull request with acceptance criteria checklist
+Phase 1 — Intake       Gather requirements and acceptance criteria
+Phase 2 — Explore      Parallel code-explorer agents map the codebase
+Phase 3 — Design       Parallel code-architect agents propose competing architectures
+Phase 4 — Implement    Execute the chosen plan, write and run tests
+Phase 5 — Review       Parallel code-reviewer agents with confidence filtering
+Phase 6 — Verify       Check each acceptance criterion with evidence
+Phase 7 — PR           Create a pull request with acceptance criteria checklist
 ```
+
+### Human Gates
+
+- **Hard gates (always stop):** Intake (approve acceptance criteria) and Design (pick architecture approach)
+- **Conditional gates (stop only if issues found):** Review and Verify
 
 ## Arguments
 
@@ -34,15 +37,12 @@ Phase 6   — PR            Create a pull request with acceptance criteria check
 |------|-------------|---------|
 | `<task description>` | Inline task description (positional) | Prompted in Phase 1 |
 | `--resume <phase>` | Resume from a specific phase | Start from Phase 1 |
-| `--skip-clarify` | Skip the clarification phase | Off |
-| `--max-questions <n>` | Max clarifying questions | 20 |
+| `--skip-review` | Skip the code review phase | Off |
 | `--no-pr` | Stop after verification, skip PR creation | Off |
-| `--simplify` | Run `/simplify` on changed files after implementation | Off |
-| `--scorecard` | Run quality gate after verification (security, testability, maintainability on changed files) | Off |
 
 ### Resume Values
 
-`intake`, `clarify`, `plan`, `implement`, `verify`, `scorecard`, `pr`
+`intake`, `explore`, `design`, `implement`, `review`, `verify`, `pr`
 
 ## Usage Examples
 
@@ -50,37 +50,35 @@ Phase 6   — PR            Create a pull request with acceptance criteria check
 # Start a new workflow with a task description
 /guided-dev Fix the pagination bug in the search results page
 
-# Skip clarification for a well-defined task
-/guided-dev --skip-clarify Add a health check endpoint at /health
-
-# Limit clarifying questions
-/guided-dev --max-questions 5 Refactor the auth middleware
-
 # Resume from implementation after a context reset
 /guided-dev --resume implement
+
+# Skip code review for a well-defined task
+/guided-dev --skip-review Add a health check endpoint at /health
 
 # Full workflow without PR creation
 /guided-dev --no-pr Prototype the new dashboard layout
 
-# Run simplify pass on changed files
-/guided-dev --simplify Refactor the data pipeline
-
-# Run quality gate before PR (audits changed files for security, testability, maintainability)
-/guided-dev --scorecard Add payment processing to checkout
 ```
+
+## Agents
+
+| Agent | Focus | Model | Dispatched In |
+|-------|-------|-------|---------------|
+| `code-explorer` | Trace execution paths, map architecture, document dependencies | Sonnet | Phase 2 (2-3 in parallel) |
+| `code-architect` | Design implementation blueprints with competing philosophies | Sonnet | Phase 3 (2-3 in parallel) |
+| `code-reviewer` | Bug detection, DRY, conventions with confidence scoring (>= 80) | Sonnet | Phase 5 (3 in parallel) |
 
 ## Skills
 
 | Skill | Purpose |
 |-------|---------|
-| `intake` | Repo exploration and requirement gathering |
-| `clarify` | Targeted clarifying questions with multi-choice options |
-| `plan` | Three-option plan generation (Minimal / Balanced / Comprehensive) |
+| `intake` | Requirement gathering and acceptance criteria collection |
 | `verify` | Acceptance criteria verification with evidence |
 
 ## How It Works
 
-The `/guided-dev` command acts as an orchestrator that delegates to specialized skills for each phase. Cross-cutting rules enforce consistency:
+The `/guided-dev` command acts as an orchestrator that dispatches specialist agents for codebase exploration, architecture design, and code review, while delegating to skills for requirement intake and acceptance verification. Cross-cutting rules enforce consistency:
 
 - **Phase tracking** — each phase is announced; ask "where are we?" at any time
 - **Pause on ambiguity** — Claude stops and asks rather than guessing
