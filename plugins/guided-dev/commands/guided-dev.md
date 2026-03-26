@@ -17,6 +17,7 @@ These rules apply throughout all phases:
 - **Walkthrough on demand:** If the user asks for a walkthrough of the changes at any point, provide one — walk through each changed file, explain what was done and why.
 - **Playwright for live verification:** If the task involves any user-facing behavior (UI components, pages, API endpoints), attempt live verification in Phases 5 and 6: detect a dev server command (`scripts.dev` or `scripts.start` in `package.json`, or equivalent), start it with `Bash` `run_in_background`, and use Playwright MCP to navigate/interact/verify. The dev server is started once at the beginning of Phase 5 and kept running through Phase 6, then stopped after Phase 6 completes. Skip if no dev server is available or the task is purely backend/library work.
 - **Pause on ambiguity:** If at any point during implementation you encounter a decision that isn't covered by the plan or clarification, stop and ask the user rather than guessing.
+- **Multiple-choice with custom option:** When presenting a choice to the user, format it as a numbered list of options and always include a final option for the user to describe something custom (e.g., "N. Other — describe your own"). Never present a closed set of choices without a custom escape hatch.
 - **Artifact persistence:** Every phase writes its structured output to `docs/guided-dev/`. These files are the source of truth for inter-phase communication and resume. Read artifact files at the start of each phase rather than relying solely on conversation context.
 
 ---
@@ -147,7 +148,17 @@ After agents return:
    - Brief summary of each agent's approach with trade-offs
    - Your recommendation with reasoning
    - Concrete differences between the approaches
-3. **Ask the user which approach they prefer.** Accommodate hybrid requests (e.g., "approach 2 but with the error handling from approach 1").
+3. **Ask the user which approach they prefer** using a numbered list:
+
+   > Which approach do you prefer?
+   >
+   > 1. **Approach 1** — Minimal changes — \<one-line summary\>
+   > 2. **Approach 2** — Clean architecture — \<one-line summary\>
+   > 3. **Approach 3** — Pragmatic balance — \<one-line summary\>
+   > 4. **Hybrid** — combine elements from multiple approaches (describe what you want)
+   > 5. **Other** — describe a different direction entirely
+
+   Accommodate hybrid requests (e.g., "approach 2 but with the error handling from approach 1").
 
 **If small mode:**
 
@@ -158,7 +169,13 @@ The agent prompt must include: the intake summary, exploration summary, and all 
 After the agent returns:
 
 1. Present the design to the user with a summary and trade-offs.
-2. **Ask the user to approve or request changes.**
+2. **Ask the user how to proceed** using a numbered list:
+
+   > How would you like to proceed?
+   >
+   > 1. **Approve** — proceed with this design as-is
+   > 2. **Request changes** — describe what you'd like adjusted
+   > 3. **Different direction** — describe an alternative approach
 
 **HARD GATE:** The user must approve an approach before proceeding.
 
@@ -243,7 +260,18 @@ For each sprint, produce a sprint contract and write it to `docs/guided-dev/spri
     - Depends on: Sprint NN (if applicable)
     - Produces: <what later sprints need from this one>
 
-Present all sprint contracts to the user for review. The user can request changes (reorder, merge, split, adjust scope). Announce: `"Sprint contracts ready. Does this breakdown look right, or would you like to adjust?"` Wait for confirmation before proceeding.
+Present all sprint contracts to the user for review using a numbered list:
+
+> Sprint contracts ready. How would you like to proceed?
+>
+> 1. **Approve** — looks good, start implementation
+> 2. **Reorder** — change the sprint sequence
+> 3. **Merge** — combine sprints
+> 4. **Split** — break a sprint into smaller pieces
+> 5. **Adjust scope** — move items between sprints
+> 6. **Other** — describe a different change
+
+Wait for confirmation before proceeding.
 
 **If small mode:** Skip sprint planning. Implementation will proceed as a single pass.
 
@@ -307,9 +335,13 @@ Proceed / Revise design
 
 If all checks pass: Announce `"Design evaluation passed. Proceeding to implementation."` and continue to Phase 4.
 
-If issues are found: Present them to the user with suggested fixes. The user can:
-- Request design changes (loop back to Phase 3 architect or make targeted edits to the blueprint)
-- Accept the design as-is and proceed
+If issues are found: Present them to the user with suggested fixes and a numbered list of options:
+
+> Design evaluation found issues. How would you like to proceed?
+>
+> 1. **Revise design** — loop back and update the architecture
+> 2. **Accept as-is** — proceed despite the issues
+> 3. **Other** — describe a different approach
 
 Update `docs/guided-dev/design-evaluation.md` with the final result.
 
@@ -414,14 +446,26 @@ Write the consolidated review findings to `docs/guided-dev/review-findings.md`. 
 **CONDITIONAL GATE — only stops if issues are found:**
 
 **If there are CRITICAL findings:**
-List each one and tell the user:
-> Code review found N critical issues. Fix these before verification, or type `skip` to proceed anyway.
+List each one and present options:
 
-Wait for the user's response. If they want fixes, apply them. If they type `skip`, proceed to Phase 6.
+> Code review found N critical issues. How would you like to proceed?
+>
+> 1. **Fix all** — fix these before verification
+> 2. **Fix some** — tell me which ones to fix
+> 3. **Skip** — proceed to verification anyway
+> 4. **Other** — describe a different approach
+
+Wait for the user's response and act accordingly.
 
 **If there are MAJOR findings (no CRITICAL):**
-List them and ask:
-> These MAJOR issues were found in the changed code. Fix now, or proceed to verification?
+List them and present options:
+
+> These MAJOR issues were found in the changed code. How would you like to proceed?
+>
+> 1. **Fix all** — fix these now
+> 2. **Fix some** — tell me which ones to fix
+> 3. **Proceed** — move to verification without fixing
+> 4. **Other** — describe a different approach
 
 Wait for the user's response and act accordingly.
 
@@ -466,7 +510,15 @@ The verify skill will:
 
 If all criteria pass: Announce `"All acceptance criteria verified."` and proceed automatically to Phase 7.
 
-If there are failures: The verify skill will present what's wrong and suggest fixes. Allow the verify skill to fix them if the user agrees. Re-verify until all criteria pass or the user accepts the remaining state.
+If there are failures: The verify skill will present what's wrong and suggest fixes, then present options:
+
+> Verification found failures. How would you like to proceed?
+>
+> 1. **Fix and re-verify** — apply suggested fixes and check again
+> 2. **Accept as-is** — accept the current state and finish
+> 3. **Other** — describe a different approach
+
+Re-verify until all criteria pass or the user accepts the remaining state.
 
 ### Generate Acceptance Record
 
