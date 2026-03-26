@@ -21,8 +21,8 @@ For each acceptance criterion, perform a concrete check:
 
 - **Code-based criteria** — Use `Read` to examine the relevant code. Verify the logic matches the requirement. Trace the code path end-to-end where possible.
 - **Test-based criteria** — If tests exist for the criterion, use `Bash` to run them and confirm they pass.
-- **UI-based criteria** — If the criterion involves UI behavior, check the component code and suggest Playwright verification if applicable.
-- **API-based criteria** — Check route definitions, handlers, response shapes, and status codes.
+- **UI-based criteria** — If a dev server is running, use Playwright MCP to: navigate to the relevant page/route, interact with the UI as a user would (click buttons, fill forms, navigate), assert that the expected behavior occurs (element visibility, text content, navigation), and take a screenshot as evidence. If no dev server is available, fall back to checking component code and noting that live verification was not performed.
+- **API-based criteria** — If a server is running, use `Bash` with `curl` to hit endpoints and verify response shapes, status codes, and payloads. Otherwise, check route definitions, handlers, and test results.
 - **Configuration-based criteria** — Read config files and verify values are set correctly.
 
 ### 3. Produce Verification Checklist
