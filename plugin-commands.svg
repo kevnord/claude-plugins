@@ -1,0 +1,211 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="420" height="920" viewBox="0 0 420 920">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#0f1729"/>
+      <stop offset="100%" stop-color="#0a0f1a"/>
+    </linearGradient>
+    <linearGradient id="cardBg" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#1a2236"/>
+      <stop offset="100%" stop-color="#1e2840"/>
+    </linearGradient>
+    <filter id="shadow">
+      <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#000" flood-opacity="0.3"/>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="420" height="920" fill="url(#bg)" rx="16"/>
+
+  <!-- Header -->
+  <text x="210" y="44" font-family="system-ui, -apple-system, sans-serif" font-size="28" fill="#ffffff" text-anchor="middle" font-weight="700">Commands &amp; Args</text>
+  <text x="210" y="66" font-family="system-ui, -apple-system, sans-serif" font-size="12" fill="#64748b" text-anchor="middle">Full reference for plugin slash commands</text>
+
+  <!-- /scorecard Section -->
+  <circle cx="36" cy="96" r="8" fill="#22c55e" opacity="0.3"/>
+  <circle cx="36" cy="96" r="4" fill="#22c55e"/>
+  <text x="52" y="101" font-family="'SF Mono', Consolas, monospace" font-size="18" fill="#4ade80" font-weight="700">/scorecard</text>
+  <text x="24" y="118" font-family="system-ui, -apple-system, sans-serif" font-size="11" fill="#94a3b8">Score code quality across 10 dimensions with weighted composite scoring</text>
+
+  <!-- Scorecard Args Card -->
+  <rect x="24" y="132" width="372" height="196" rx="12" fill="url(#cardBg)" filter="url(#shadow)"/>
+  <!-- Left accent bar -->
+  <rect x="24" y="132" width="4" height="196" rx="2" fill="#22c55e" opacity="0.5"/>
+
+  <!-- Arg rows - flag | description -->
+  <!-- Row 1 -->
+  <text x="40" y="156" font-family="'SF Mono', Consolas, monospace" font-size="10.5">
+    <tspan fill="#4ade80">--categories</tspan><tspan fill="#64748b"> &lt;list&gt;</tspan>
+  </text>
+  <text x="220" y="156" font-family="system-ui, -apple-system, sans-serif" font-size="10" fill="#94a3b8">Specific categories only</text>
+
+  <!-- Row 2 -->
+  <text x="40" y="182" font-family="'SF Mono', Consolas, monospace" font-size="10.5">
+    <tspan fill="#4ade80">--weight</tspan><tspan fill="#64748b"> &lt;cat&gt;=&lt;n&gt;</tspan>
+  </text>
+  <text x="220" y="182" font-family="system-ui, -apple-system, sans-serif" font-size="10" fill="#94a3b8">Override category weight</text>
+
+  <!-- Row 3 -->
+  <text x="40" y="208" font-family="'SF Mono', Consolas, monospace" font-size="10.5">
+    <tspan fill="#4ade80">--min-score</tspan><tspan fill="#64748b"> &lt;n&gt;</tspan>
+  </text>
+  <text x="220" y="208" font-family="system-ui, -apple-system, sans-serif" font-size="10" fill="#94a3b8">Composite threshold (1-10)</text>
+
+  <!-- Row 4 -->
+  <text x="40" y="234" font-family="'SF Mono', Consolas, monospace" font-size="10.5">
+    <tspan fill="#4ade80">--min-category-score</tspan><tspan fill="#64748b"> &lt;n&gt;</tspan>
+  </text>
+  <text x="220" y="234" font-family="system-ui, -apple-system, sans-serif" font-size="10" fill="#94a3b8">Per-category threshold</text>
+
+  <!-- Row 5 -->
+  <text x="40" y="260" font-family="'SF Mono', Consolas, monospace" font-size="10.5">
+    <tspan fill="#4ade80">--scope</tspan><tspan fill="#64748b"> &lt;value&gt;</tspan>
+  </text>
+  <text x="220" y="260" font-family="system-ui, -apple-system, sans-serif" font-size="10" fill="#94a3b8">uncommitted | staged | HEAD~N</text>
+
+  <!-- Row 6 -->
+  <text x="40" y="286" font-family="'SF Mono', Consolas, monospace" font-size="10.5">
+    <tspan fill="#4ade80">--standards-path</tspan><tspan fill="#64748b"> &lt;path&gt;</tspan>
+  </text>
+  <text x="220" y="286" font-family="system-ui, -apple-system, sans-serif" font-size="10" fill="#94a3b8">Local custom standards</text>
+
+  <!-- Row 7 -->
+  <text x="40" y="312" font-family="'SF Mono', Consolas, monospace" font-size="10.5">
+    <tspan fill="#4ade80">--standards-url</tspan><tspan fill="#64748b"> &lt;url&gt;</tspan>
+  </text>
+  <text x="220" y="312" font-family="system-ui, -apple-system, sans-serif" font-size="10" fill="#94a3b8">Remote custom standards</text>
+
+  <!-- 10 Audit Categories -->
+  <text x="210" y="356" font-family="system-ui, -apple-system, sans-serif" font-size="13" fill="#e2e8f0" text-anchor="middle" font-weight="600">10 Audit Categories</text>
+
+  <!-- Row 1 of category pills -->
+  <rect x="24" y="370" width="66" height="20" rx="10" fill="#22c55e" opacity="0.12"/>
+  <text x="57" y="384" font-family="system-ui, -apple-system, sans-serif" font-size="9" fill="#4ade80" text-anchor="middle">simplicity</text>
+
+  <rect x="98" y="370" width="42" height="20" rx="10" fill="#22c55e" opacity="0.12"/>
+  <text x="119" y="384" font-family="system-ui, -apple-system, sans-serif" font-size="9" fill="#4ade80" text-anchor="middle">reuse</text>
+
+  <rect x="148" y="370" width="56" height="20" rx="10" fill="#22c55e" opacity="0.12"/>
+  <text x="176" y="384" font-family="system-ui, -apple-system, sans-serif" font-size="9" fill="#4ade80" text-anchor="middle">security</text>
+
+  <rect x="212" y="370" width="72" height="20" rx="10" fill="#22c55e" opacity="0.12"/>
+  <text x="248" y="384" font-family="system-ui, -apple-system, sans-serif" font-size="9" fill="#4ade80" text-anchor="middle">performance</text>
+
+  <rect x="292" y="370" width="42" height="20" rx="10" fill="#22c55e" opacity="0.12"/>
+  <text x="313" y="384" font-family="system-ui, -apple-system, sans-serif" font-size="9" fill="#4ade80" text-anchor="middle">ui-ux</text>
+
+  <rect x="342" y="370" width="54" height="20" rx="10" fill="#22c55e" opacity="0.12"/>
+  <text x="369" y="384" font-family="system-ui, -apple-system, sans-serif" font-size="9" fill="#4ade80" text-anchor="middle">devops</text>
+
+  <!-- Row 2 of category pills -->
+  <rect x="24" y="396" width="68" height="20" rx="10" fill="#22c55e" opacity="0.12"/>
+  <text x="58" y="410" font-family="system-ui, -apple-system, sans-serif" font-size="9" fill="#4ade80" text-anchor="middle">testability</text>
+
+  <rect x="100" y="396" width="90" height="20" rx="10" fill="#22c55e" opacity="0.12"/>
+  <text x="145" y="410" font-family="system-ui, -apple-system, sans-serif" font-size="9" fill="#4ade80" text-anchor="middle">maintainability</text>
+
+  <rect x="198" y="396" width="82" height="20" rx="10" fill="#22c55e" opacity="0.12"/>
+  <text x="239" y="410" font-family="system-ui, -apple-system, sans-serif" font-size="9" fill="#4ade80" text-anchor="middle">observability</text>
+
+  <rect x="288" y="396" width="68" height="20" rx="10" fill="#22c55e" opacity="0.12"/>
+  <text x="322" y="410" font-family="system-ui, -apple-system, sans-serif" font-size="9" fill="#4ade80" text-anchor="middle">api-design</text>
+
+  <!-- Divider -->
+  <line x1="60" y1="436" x2="360" y2="436" stroke="#1e293b" stroke-width="1"/>
+
+  <!-- /guided-dev Section -->
+  <circle cx="36" cy="462" r="8" fill="#3b82f6" opacity="0.3"/>
+  <circle cx="36" cy="462" r="4" fill="#3b82f6"/>
+  <text x="52" y="467" font-family="'SF Mono', Consolas, monospace" font-size="18" fill="#60a5fa" font-weight="700">/guided-dev</text>
+  <text x="24" y="484" font-family="system-ui, -apple-system, sans-serif" font-size="11" fill="#94a3b8">Agent-powered development workflow with exploration, design, review &amp; PR</text>
+
+  <!-- Guided Dev Args Card -->
+  <rect x="24" y="498" width="372" height="122" rx="12" fill="url(#cardBg)" filter="url(#shadow)"/>
+  <!-- Left accent bar -->
+  <rect x="24" y="498" width="4" height="122" rx="2" fill="#3b82f6" opacity="0.5"/>
+
+  <!-- Row 1 -->
+  <text x="40" y="522" font-family="'SF Mono', Consolas, monospace" font-size="10.5">
+    <tspan fill="#60a5fa">&lt;task&gt;</tspan>
+  </text>
+  <text x="220" y="522" font-family="system-ui, -apple-system, sans-serif" font-size="10" fill="#94a3b8">Inline task description</text>
+
+  <!-- Row 2 -->
+  <text x="40" y="550" font-family="'SF Mono', Consolas, monospace" font-size="10.5">
+    <tspan fill="#60a5fa">--resume</tspan><tspan fill="#64748b"> &lt;phase&gt;</tspan>
+  </text>
+  <text x="220" y="550" font-family="system-ui, -apple-system, sans-serif" font-size="10" fill="#94a3b8">Resume from a phase</text>
+
+  <!-- Row 3 -->
+  <text x="40" y="578" font-family="'SF Mono', Consolas, monospace" font-size="10.5" fill="#60a5fa">--skip-review</text>
+  <text x="220" y="578" font-family="system-ui, -apple-system, sans-serif" font-size="10" fill="#94a3b8">Skip code review phase</text>
+
+  <!-- Row 4 -->
+  <text x="40" y="606" font-family="'SF Mono', Consolas, monospace" font-size="10.5" fill="#60a5fa">--no-pr</text>
+  <text x="220" y="606" font-family="system-ui, -apple-system, sans-serif" font-size="10" fill="#94a3b8">Stop after verification</text>
+
+  <!-- Resume Phases -->
+  <text x="210" y="648" font-family="system-ui, -apple-system, sans-serif" font-size="11" fill="#94a3b8" text-anchor="middle">--resume phases:</text>
+
+  <!-- Phase flow pills -->
+  <rect x="18" y="660" width="40" height="18" rx="9" fill="#3b82f6" opacity="0.15"/>
+  <text x="38" y="673" font-family="'SF Mono', Consolas, monospace" font-size="8" fill="#60a5fa" text-anchor="middle">intake</text>
+  <!-- Arrow -->
+  <path d="M61,669 L66,669" stroke="#334155" stroke-width="1.5"/>
+  <path d="M64,666 L68,669 L64,672" fill="none" stroke="#334155" stroke-width="1"/>
+
+  <rect x="72" y="660" width="44" height="18" rx="9" fill="#3b82f6" opacity="0.15"/>
+  <text x="94" y="673" font-family="'SF Mono', Consolas, monospace" font-size="8" fill="#60a5fa" text-anchor="middle">explore</text>
+  <path d="M119,669 L124,669" stroke="#334155" stroke-width="1.5"/>
+  <path d="M122,666 L126,669 L122,672" fill="none" stroke="#334155" stroke-width="1"/>
+
+  <rect x="130" y="660" width="42" height="18" rx="9" fill="#3b82f6" opacity="0.15"/>
+  <text x="151" y="673" font-family="'SF Mono', Consolas, monospace" font-size="8" fill="#60a5fa" text-anchor="middle">design</text>
+  <path d="M175,669 L180,669" stroke="#334155" stroke-width="1.5"/>
+  <path d="M178,666 L182,669 L178,672" fill="none" stroke="#334155" stroke-width="1"/>
+
+  <rect x="186" y="660" width="56" height="18" rx="9" fill="#3b82f6" opacity="0.15"/>
+  <text x="214" y="673" font-family="'SF Mono', Consolas, monospace" font-size="8" fill="#60a5fa" text-anchor="middle">implement</text>
+  <path d="M245,669 L250,669" stroke="#334155" stroke-width="1.5"/>
+  <path d="M248,666 L252,669 L248,672" fill="none" stroke="#334155" stroke-width="1"/>
+
+  <rect x="256" y="660" width="42" height="18" rx="9" fill="#3b82f6" opacity="0.15"/>
+  <text x="277" y="673" font-family="'SF Mono', Consolas, monospace" font-size="8" fill="#60a5fa" text-anchor="middle">review</text>
+  <path d="M301,669 L306,669" stroke="#334155" stroke-width="1.5"/>
+  <path d="M304,666 L308,669 L304,672" fill="none" stroke="#334155" stroke-width="1"/>
+
+  <rect x="312" y="660" width="40" height="18" rx="9" fill="#3b82f6" opacity="0.15"/>
+  <text x="332" y="673" font-family="'SF Mono', Consolas, monospace" font-size="8" fill="#60a5fa" text-anchor="middle">verify</text>
+  <path d="M355,669 L360,669" stroke="#334155" stroke-width="1.5"/>
+  <path d="M358,666 L362,669 L358,672" fill="none" stroke="#334155" stroke-width="1"/>
+
+  <rect x="366" y="660" width="24" height="18" rx="9" fill="#3b82f6" opacity="0.15"/>
+  <text x="378" y="673" font-family="'SF Mono', Consolas, monospace" font-size="8" fill="#60a5fa" text-anchor="middle">pr</text>
+
+  <!-- Divider -->
+  <line x1="60" y1="700" x2="360" y2="700" stroke="#1e293b" stroke-width="1"/>
+
+  <!-- Examples Section -->
+  <text x="210" y="726" font-family="system-ui, -apple-system, sans-serif" font-size="16" fill="#e2e8f0" text-anchor="middle" font-weight="600">Examples</text>
+
+  <!-- Example 1 -->
+  <rect x="24" y="740" width="372" height="40" rx="10" fill="#0d1117" stroke="#1e293b" stroke-width="1"/>
+  <text x="36" y="757" font-family="'SF Mono', Consolas, monospace" font-size="10" fill="#4ade80">/scorecard --categories security,performance</text>
+  <text x="36" y="772" font-family="system-ui, -apple-system, sans-serif" font-size="9" fill="#64748b">Audit two specific categories</text>
+
+  <!-- Example 2 -->
+  <rect x="24" y="788" width="372" height="40" rx="10" fill="#0d1117" stroke="#1e293b" stroke-width="1"/>
+  <text x="36" y="805" font-family="'SF Mono', Consolas, monospace" font-size="10" fill="#60a5fa">/guided-dev Add OAuth support --skip-review</text>
+  <text x="36" y="820" font-family="system-ui, -apple-system, sans-serif" font-size="9" fill="#64748b">Build feature, skip code review</text>
+
+  <!-- Example 3 -->
+  <rect x="24" y="836" width="372" height="40" rx="10" fill="#0d1117" stroke="#1e293b" stroke-width="1"/>
+  <text x="36" y="853" font-family="'SF Mono', Consolas, monospace" font-size="10" fill="#60a5fa">/guided-dev --resume implement</text>
+  <text x="36" y="868" font-family="system-ui, -apple-system, sans-serif" font-size="9" fill="#64748b">Resume workflow from implementation phase</text>
+
+  <!-- Footer Pills -->
+  <rect x="100" y="892" width="92" height="22" rx="11" fill="#1e293b"/>
+  <text x="146" y="906" font-family="system-ui, -apple-system, sans-serif" font-size="9" fill="#64748b" text-anchor="middle">Inline arguments</text>
+
+  <rect x="200" y="892" width="120" height="22" rx="11" fill="#1e293b"/>
+  <text x="260" y="906" font-family="system-ui, -apple-system, sans-serif" font-size="9" fill="#64748b" text-anchor="middle">See plugin READMEs</text>
+</svg>

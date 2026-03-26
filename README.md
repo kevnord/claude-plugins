@@ -14,7 +14,7 @@ A curated marketplace of [Claude Code](https://docs.anthropic.com/en/docs/claude
 
 | Plugin | Description | Commands | Version |
 |--------|-------------|----------|---------|
-| [guided-dev](plugins/guided-dev/) | Structured development workflow with intake, clarification, planning, implementation, verification, and PR creation | `/guided-dev` | 2.2.0 |
+| [guided-dev](plugins/guided-dev/) | Structured development workflow with intake, clarification, planning, implementation, verification, and PR creation | `/guided-dev` | 2.3.0 |
 
 > More plugins coming soon. [Submit yours!](CONTRIBUTING.md)
 

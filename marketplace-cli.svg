@@ -1,0 +1,127 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="420" height="720" viewBox="0 0 420 720">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#0f1729"/>
+      <stop offset="100%" stop-color="#0a0f1a"/>
+    </linearGradient>
+    <linearGradient id="cardBg" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#1a2236"/>
+      <stop offset="100%" stop-color="#1e2840"/>
+    </linearGradient>
+    <filter id="shadow">
+      <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#000" flood-opacity="0.3"/>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="420" height="720" fill="url(#bg)" rx="16"/>
+
+  <!-- Header -->
+  <text x="210" y="44" font-family="system-ui, -apple-system, sans-serif" font-size="28" fill="#ffffff" text-anchor="middle" font-weight="700">kevnord-plugins</text>
+  <text x="210" y="66" font-family="system-ui, -apple-system, sans-serif" font-size="12" fill="#64748b" text-anchor="middle">Plugin Marketplace for Claude Code</text>
+
+  <!-- Quick Setup Section -->
+  <text x="24" y="100" font-family="system-ui, -apple-system, sans-serif" font-size="16" fill="#e2e8f0" font-weight="600">Quick Setup</text>
+
+  <!-- Step 1: Add Marketplace -->
+  <rect x="24" y="114" width="372" height="58" rx="12" fill="url(#cardBg)" filter="url(#shadow)"/>
+  <circle cx="52" cy="143" r="14" fill="#22c55e"/>
+  <text x="52" y="148" font-family="system-ui, -apple-system, sans-serif" font-size="12" fill="#ffffff" text-anchor="middle" font-weight="700">1</text>
+  <text x="76" y="138" font-family="system-ui, -apple-system, sans-serif" font-size="14" fill="#ffffff" font-weight="600">Add Marketplace</text>
+  <text x="76" y="158" font-family="'SF Mono', 'Fira Code', Consolas, monospace" font-size="10.5" fill="#4ade80">/plugin marketplace add kevnord/claude-plugins</text>
+
+  <!-- Connector 1→2 -->
+  <line x1="52" y1="172" x2="52" y2="180" stroke="#334155" stroke-width="2" stroke-dasharray="3,3"/>
+
+  <!-- Step 2: Install Plugin -->
+  <rect x="24" y="180" width="372" height="58" rx="12" fill="url(#cardBg)" filter="url(#shadow)"/>
+  <circle cx="52" cy="209" r="14" fill="#3b82f6"/>
+  <text x="52" y="214" font-family="system-ui, -apple-system, sans-serif" font-size="12" fill="#ffffff" text-anchor="middle" font-weight="700">2</text>
+  <text x="76" y="204" font-family="system-ui, -apple-system, sans-serif" font-size="14" fill="#ffffff" font-weight="600">Install a Plugin</text>
+  <text x="76" y="224" font-family="'SF Mono', 'Fira Code', Consolas, monospace" font-size="10.5" fill="#60a5fa">/plugin install &lt;name&gt;@kevnord-plugins</text>
+
+  <!-- Connector 2→3 -->
+  <line x1="52" y1="238" x2="52" y2="246" stroke="#334155" stroke-width="2" stroke-dasharray="3,3"/>
+
+  <!-- Step 3: Update Plugins -->
+  <rect x="24" y="246" width="372" height="58" rx="12" fill="url(#cardBg)" filter="url(#shadow)"/>
+  <circle cx="52" cy="275" r="14" fill="#a855f7"/>
+  <text x="52" y="280" font-family="system-ui, -apple-system, sans-serif" font-size="12" fill="#ffffff" text-anchor="middle" font-weight="700">3</text>
+  <text x="76" y="270" font-family="system-ui, -apple-system, sans-serif" font-size="14" fill="#ffffff" font-weight="600">Update Plugins</text>
+  <text x="76" y="290" font-family="'SF Mono', 'Fira Code', Consolas, monospace" font-size="10.5" fill="#c084fc">/plugin marketplace update kevnord-plugins</text>
+
+  <!-- Divider -->
+  <line x1="60" y1="330" x2="360" y2="330" stroke="#1e293b" stroke-width="1"/>
+
+  <!-- Available Plugins Section -->
+  <text x="210" y="356" font-family="system-ui, -apple-system, sans-serif" font-size="16" fill="#e2e8f0" text-anchor="middle" font-weight="600">Available Plugins</text>
+
+  <!-- Scorecard Plugin Card -->
+  <rect x="24" y="372" width="180" height="88" rx="10" fill="#1a2236" stroke="#22c55e" stroke-width="1" filter="url(#shadow)"/>
+  <rect x="24" y="372" width="180" height="22" rx="10" fill="#22c55e" opacity="0.15"/>
+  <rect x="24" y="386" width="180" height="8" fill="#1a2236"/>
+  <text x="36" y="389" font-family="'SF Mono', Consolas, monospace" font-size="13" fill="#4ade80" font-weight="600">scorecard</text>
+  <!-- Version badge -->
+  <rect x="134" y="376" width="58" height="18" rx="9" fill="#1e2840" stroke="#334155" stroke-width="0.5"/>
+  <text x="163" y="389" font-family="system-ui, -apple-system, sans-serif" font-size="9" fill="#64748b" text-anchor="middle">v1.0.0</text>
+  <!-- Category pill -->
+  <rect x="36" y="400" width="76" height="18" rx="9" fill="#22c55e" opacity="0.15"/>
+  <text x="74" y="413" font-family="system-ui, -apple-system, sans-serif" font-size="9" fill="#4ade80" text-anchor="middle">Code Quality</text>
+  <!-- Description -->
+  <text x="36" y="432" font-family="system-ui, -apple-system, sans-serif" font-size="10" fill="#94a3b8">10-dimension quality</text>
+  <text x="36" y="446" font-family="system-ui, -apple-system, sans-serif" font-size="10" fill="#94a3b8">assessment with scoring</text>
+
+  <!-- Guided Dev Plugin Card -->
+  <rect x="216" y="372" width="180" height="88" rx="10" fill="#1a2236" stroke="#3b82f6" stroke-width="1" filter="url(#shadow)"/>
+  <rect x="216" y="372" width="180" height="22" rx="10" fill="#3b82f6" opacity="0.15"/>
+  <rect x="216" y="386" width="180" height="8" fill="#1a2236"/>
+  <text x="228" y="389" font-family="'SF Mono', Consolas, monospace" font-size="13" fill="#60a5fa" font-weight="600">guided-dev</text>
+  <!-- Version badge -->
+  <rect x="326" y="376" width="58" height="18" rx="9" fill="#1e2840" stroke="#334155" stroke-width="0.5"/>
+  <text x="355" y="389" font-family="system-ui, -apple-system, sans-serif" font-size="9" fill="#64748b" text-anchor="middle">v2.1.0</text>
+  <!-- Category pill -->
+  <rect x="228" y="400" width="60" height="18" rx="9" fill="#3b82f6" opacity="0.15"/>
+  <text x="258" y="413" font-family="system-ui, -apple-system, sans-serif" font-size="9" fill="#60a5fa" text-anchor="middle">Workflow</text>
+  <!-- Description -->
+  <text x="228" y="432" font-family="system-ui, -apple-system, sans-serif" font-size="10" fill="#94a3b8">Agent-powered dev</text>
+  <text x="228" y="446" font-family="system-ui, -apple-system, sans-serif" font-size="10" fill="#94a3b8">workflow with reviews</text>
+
+  <!-- Divider -->
+  <line x1="60" y1="484" x2="360" y2="484" stroke="#1e293b" stroke-width="1"/>
+
+  <!-- Team Setup Section -->
+  <text x="210" y="510" font-family="system-ui, -apple-system, sans-serif" font-size="16" fill="#e2e8f0" text-anchor="middle" font-weight="600">Require for Team</text>
+  <text x="210" y="528" font-family="system-ui, -apple-system, sans-serif" font-size="11" fill="#64748b" text-anchor="middle">.claude/settings.json</text>
+
+  <!-- Code Block -->
+  <rect x="24" y="542" width="372" height="100" rx="10" fill="#0d1117" stroke="#1e293b" stroke-width="1"/>
+  <!-- JSON Content -->
+  <text x="36" y="562" font-family="'SF Mono', Consolas, monospace" font-size="10" fill="#7c85a3">{</text>
+  <text x="36" y="578" font-family="'SF Mono', Consolas, monospace" font-size="10">
+    <tspan fill="#7c85a3">  </tspan><tspan fill="#60a5fa">"extraKnownMarketplaces"</tspan><tspan fill="#7c85a3">: {</tspan>
+  </text>
+  <text x="36" y="594" font-family="'SF Mono', Consolas, monospace" font-size="10">
+    <tspan fill="#7c85a3">    </tspan><tspan fill="#60a5fa">"kevnord-plugins"</tspan><tspan fill="#7c85a3">: { </tspan><tspan fill="#64748b">...</tspan><tspan fill="#7c85a3"> }</tspan>
+  </text>
+  <text x="36" y="610" font-family="'SF Mono', Consolas, monospace" font-size="10" fill="#7c85a3">  },</text>
+  <text x="36" y="626" font-family="'SF Mono', Consolas, monospace" font-size="10">
+    <tspan fill="#7c85a3">  </tspan><tspan fill="#60a5fa">"enabledPlugins"</tspan><tspan fill="#7c85a3">: { </tspan><tspan fill="#4ade80">"scorecard@kevnord-plugins"</tspan><tspan fill="#7c85a3">: </tspan><tspan fill="#f97316">true</tspan><tspan fill="#7c85a3"> }</tspan>
+  </text>
+  <text x="36" y="642" font-family="'SF Mono', Consolas, monospace" font-size="10" fill="#7c85a3">}</text>
+
+  <!-- Divider -->
+  <line x1="60" y1="666" x2="360" y2="666" stroke="#1e293b" stroke-width="1"/>
+
+  <!-- Footer Pills -->
+  <rect x="42" y="684" width="84" height="22" rx="11" fill="#1e293b"/>
+  <text x="84" y="698" font-family="system-ui, -apple-system, sans-serif" font-size="9" fill="#64748b" text-anchor="middle">Open source</text>
+
+  <rect x="134" y="684" width="76" height="22" rx="11" fill="#1e293b"/>
+  <text x="172" y="698" font-family="system-ui, -apple-system, sans-serif" font-size="9" fill="#64748b" text-anchor="middle">MIT License</text>
+
+  <rect x="218" y="684" width="74" height="22" rx="11" fill="#1e293b"/>
+  <text x="255" y="698" font-family="system-ui, -apple-system, sans-serif" font-size="9" fill="#64748b" text-anchor="middle">install.sh</text>
+
+  <rect x="300" y="684" width="78" height="22" rx="11" fill="#1e293b"/>
+  <text x="339" y="698" font-family="system-ui, -apple-system, sans-serif" font-size="9" fill="#64748b" text-anchor="middle">Community</text>
+</svg>
