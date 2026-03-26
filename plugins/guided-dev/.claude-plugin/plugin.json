@@ -1,5 +1,5 @@
 {
   "name": "guided-dev",
-  "description": "Agent-powered development workflow with parallel codebase exploration, architecture design, code review, and acceptance criteria verification",
-  "version": "2.2.0"
+  "description": "Agent-powered development workflow with auto-scaling complexity, design evaluation, Playwright-grounded review, and acceptance verification",
+  "version": "2.3.0"
 }
