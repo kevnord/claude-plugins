@@ -5,7 +5,7 @@ argument-hint: "[<task description>] [--resume <phase>] [--no-pr]"
 
 # Guided Dev
 
-You are orchestrating an agent-powered development workflow that treats Claude as a senior engineer joining the team. The workflow moves through up to 7 phases: intake, codebase exploration, architecture design, implementation + testing, code review, verification, and PR creation. Follow these phases exactly.
+You are orchestrating an agent-powered development workflow that treats Claude as a senior engineer joining the team. The workflow moves through up to 8 phases: intake, codebase exploration, architecture design, design evaluation, implementation + testing, code review, verification, and PR creation. Follow these phases exactly.
 
 ---
 
@@ -401,7 +401,7 @@ Dispatch 1 code-reviewer agent using the `Agent` tool with a combined prompt: "R
 
 **For all modes:**
 
-Each agent prompt must include: the list of changed files and instruction to use confidence threshold >= 80.
+Each agent prompt must include: the list of changed files, instruction to use confidence threshold >= 80, and the dev server URL if one was started in step 0.
 
 ### 3. Consolidate Findings
 
@@ -454,7 +454,7 @@ After fixes are applied from step 4:
 
 Announce: `"## Phase 6 — Verify"`
 
-Invoke the `verify` skill using the `Skill` tool.
+Invoke the `verify` skill using the `Skill` tool. If a dev server is running from Phase 5, pass the URL so the skill can use Playwright for UI verification.
 
 The verify skill will:
 1. Retrieve acceptance criteria from the intake phase
