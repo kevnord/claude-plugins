@@ -21,7 +21,13 @@ For each acceptance criterion, perform a concrete check:
 
 - **Code-based criteria** — Use `Read` to examine the relevant code. Verify the logic matches the requirement. Trace the code path end-to-end where possible.
 - **Test-based criteria** — If tests exist for the criterion, use `Bash` to run them and confirm they pass.
-- **UI-based criteria** — If a dev server is running, use Playwright MCP to: navigate to the relevant page/route, interact with the UI as a user would (click buttons, fill forms, navigate), assert that the expected behavior occurs (element visibility, text content, navigation), and take a screenshot as evidence. If no dev server is available, fall back to checking component code and noting that live verification was not performed.
+- **UI-based criteria** — If a dev server is running, use Playwright MCP to demonstrate the criterion via live interaction:
+  1. Navigate to the relevant page or route
+  2. Perform the interaction described by the criterion (click buttons, fill forms, navigate)
+  3. Assert that the expected behavior occurs (element visibility, text content, navigation)
+  4. Take a screenshot as evidence using `browser_take_screenshot` and save to `docs/guided-dev/verify-screenshot-NN.png` (NN = zero-padded criterion number)
+  5. Report: "Criterion verified: [action taken], [result observed]. Screenshot: docs/guided-dev/verify-screenshot-NN.png"
+  If no dev server is available, fall back to checking component code and note that live verification was not performed.
 - **API-based criteria** — If a server is running, use `Bash` with `curl` to hit endpoints and verify response shapes, status codes, and payloads. Otherwise, check route definitions, handlers, and test results.
 - **Configuration-based criteria** — Read config files and verify values are set correctly.
 
@@ -34,7 +40,7 @@ Output in this format:
 
 | # | Criterion | Status | Evidence |
 |---|-----------|--------|----------|
-| 1 | <criterion text> | [PASS] or [FAIL] | <specific evidence — file:line, test result, or observation> |
+| 1 | <criterion text> | [PASS] or [FAIL] | <specific evidence — file:line, test result, Playwright screenshot path, or observation> |
 | 2 | <criterion text> | [PASS] or [FAIL] | <specific evidence> |
 | ... | | | |
 
