@@ -1,6 +1,6 @@
 ---
 description: Start an agent-powered development workflow with codebase exploration, architecture design, code review, verification, and PR creation
-argument-hint: "[<task description>] [--resume <phase>] [--skip-review] [--no-pr] [--full] [--sprints [N]] [--max-iterations <N>]"
+argument-hint: "[<task description>] [--resume <phase>] [--no-pr]"
 ---
 
 # Guided Dev
@@ -27,13 +27,7 @@ Parse `$ARGUMENTS` for the following:
 
 - **Positional text** — everything that isn't a flag is the inline task description. Join all positional segments into one string.
 - `--resume <phase>` — resume from a specific phase. Valid values: `intake`, `explore`, `design`, `implement`, `review`, `verify`, `pr`.
-- `--skip-review` — skip the code review phase entirely.
 - `--no-pr` — stop after verification; do not create a PR.
-- `--full` — enable multi-agent mode: 2-3 explorers, 2-3 competing architects, 3 specialized reviewers, auto sprint contracts, ADR generation, and 2 iteration max.
-- `--sprints [N]` — enable sprint contracts in Phase 4. Optional N forces sprint count; without N, auto-detects based on task size.
-- `--max-iterations <N>` — maximum implement-review-fix iterations (default: 1; `--full` sets 2; max: 5).
-
-If `--full` is provided, set `--sprints` and `--max-iterations 2` unless explicitly overridden.
 
 Store all parsed values for use throughout the workflow.
 
@@ -47,7 +41,7 @@ If `--resume` is provided:
 
 1. Announce: `"Resuming from Phase <N> — <Name>"`
 2. Before executing the target phase, re-establish context from artifact files:
-   - Check which `docs/guided-dev/` artifact files exist: `intake-summary.md`, `exploration-summary.md`, `design-blueprint.md`, `implementation-summary.md`, `review-findings.md`, `verification-results.md`
+   - Check which `docs/guided-dev/` artifact files exist: `intake-summary.md`, `exploration-summary.md`, `design-blueprint.md`, `design-evaluation.md`, `implementation-summary.md`, `review-findings.md`, `verification-results.md`
    - Read all existing artifact files to reconstruct context for the target phase
    - If required artifact files are missing (e.g., resuming at `implement` but no `intake-summary.md`), tell the user which artifacts are missing and suggest starting from an earlier phase
 3. Summarize what you've reconstructed and confirm with the user before proceeding
@@ -79,26 +73,13 @@ Write the intake summary to `docs/guided-dev/intake-summary.md`.
 
 Announce: `"## Phase 2 — Explore"`
 
-**If `--full` was provided:**
-
-Dispatch 2-3 code-explorer agents in parallel using the `Agent` tool. Each agent should target a different aspect of the codebase based on the task description:
-
-**Example agent prompts** (adapt based on the specific task):
-- "Find features similar to [task] and trace through their implementation comprehensively"
-- "Map the architecture, conventions, and abstractions for [relevant area], tracing through the code comprehensively"
-- "Analyze the current implementation of [related subsystem or integration point], tracing through the code comprehensively"
-
-**Otherwise (default — single agent):**
-
 Dispatch 1 code-explorer agent using the `Agent` tool with a combined prompt that covers all aspects: "Find features similar to [task], map the architecture, conventions, and abstractions for [relevant area], and analyze the current implementation of [related subsystems or integration points]. Trace through the code comprehensively."
 
-**For all modes:**
+The agent prompt must include the task description and acceptance criteria from the intake summary. The agent should return a list of 5-10 key files to read.
 
-Each agent prompt must include the task description and acceptance criteria from the intake summary. Each agent should return a list of 5-10 key files to read.
+After the agent returns:
 
-After agents return:
-
-1. Read all files identified by agents (deduplicated, up to ~15-20 unique files) to build deep understanding.
+1. Read all files identified by the agent (up to ~15-20 unique files) to build deep understanding.
 2. Present an exploration summary covering:
    - Tech stack and project type
    - Key conventions (naming, file organization, module structure)
@@ -111,13 +92,45 @@ Store the exploration summary — it's used by subsequent phases.
 
 Write the exploration summary to `docs/guided-dev/exploration-summary.md`.
 
+### Auto-Scale Classification
+
+After writing the exploration summary, classify the task complexity to determine how subsequent phases behave. Use two signals:
+
+1. **Acceptance criteria count** — from the intake summary (Phase 1)
+2. **Key files identified** — the number of unique key files from the exploration
+
+| Signal | Small | Medium |
+|--------|-------|--------|
+| Acceptance criteria | 1-5 | 6+ |
+| Key files from exploration | <8 | 8+ |
+
+**Either signal** hitting the medium threshold triggers medium mode.
+
+| Behavior | Small | Medium |
+|----------|-------|--------|
+| Agents per phase (design, review) | 1 | 2-3 |
+| Sprint contracts | No (single pass) | Auto-decompose |
+| Max iterations (review-fix cycle) | 2 | 3 |
+| ADR generation | No | Yes |
+| Design evaluation | Orchestrator checklist | Evaluator agent |
+
+Announce the classification:
+
+> **Task complexity: [small/medium]**
+> - Acceptance criteria: N
+> - Key files: N
+> - Mode: single-agent / multi-agent
+> - Iterations: 2 / 3
+
 ---
 
 ## Phase 3 — Design
 
 Announce: `"## Phase 3 — Design"`
 
-**If `--full` was provided:**
+Read `docs/guided-dev/intake-summary.md` and `docs/guided-dev/exploration-summary.md` to load context.
+
+**If medium mode:**
 
 Dispatch 2-3 code-architect agents in parallel using the `Agent` tool. Each agent designs the feature from a different philosophy:
 
@@ -136,7 +149,7 @@ After agents return:
    - Concrete differences between the approaches
 3. **Ask the user which approach they prefer.** Accommodate hybrid requests (e.g., "approach 2 but with the error handling from approach 1").
 
-**Otherwise (default — single agent):**
+**If small mode:**
 
 Dispatch 1 code-architect agent using the `Agent` tool with the "Pragmatic balance" philosophy: "Design an implementation that balances speed with quality. Clean enough to maintain, lean enough to ship quickly."
 
@@ -147,18 +160,21 @@ After the agent returns:
 1. Present the design to the user with a summary and trade-offs.
 2. **Ask the user to approve or request changes.**
 
-**HARD GATE:** The user must approve an approach before implementation begins.
+**HARD GATE:** The user must approve an approach before proceeding.
 
 Store the chosen plan for implementation.
 
-### Generate ADR (`--full` only)
+### Derive Slug
 
-**If `--full` was provided**, generate an Architecture Decision Record after the user selects an approach:
+Derive a slug from the task description: lowercase it, replace non-alphanumeric characters with hyphens, collapse consecutive hyphens, trim to 50 characters, and trim trailing hyphens. Store this slug — it will be reused for the ADR (medium) and acceptance record (Phase 6).
+
+### Generate ADR (medium only)
+
+**If medium mode**, generate an Architecture Decision Record after the user selects an approach:
 
 1. **Determine sequence number:** Run `ls docs/adr/ 2>/dev/null | grep -E '^\d{4}-.*\.md$' | sort -r | head -1 | grep -oE '^\d{4}'` to extract the highest existing sequence number. If the directory doesn't exist or is empty, start at `0001`. Otherwise parse the 4-digit number, add 1, and zero-pad to 4 digits.
-2. **Derive slug:** Take the task description from the intake summary. Lowercase it, replace non-alphanumeric characters with hyphens, collapse consecutive hyphens, trim to 50 characters, and trim trailing hyphens. Store this slug — it will be reused for the acceptance record in Phase 6.
-3. **Create directory:** `mkdir -p docs/adr`
-4. **Write ADR** to `docs/adr/NNNN-<slug>.md`:
+2. **Create directory:** `mkdir -p docs/adr`
+3. **Write ADR** to `docs/adr/NNNN-<slug>.md`:
 
         # NNNN. <Decision Title>
 
@@ -194,23 +210,18 @@ The ADR is written silently — no additional approval gate. The user already ap
 
 Announce the path of the written ADR file, e.g.: `"ADR written to docs/adr/0003-add-oauth-support.md"`
 
-**If `--full` was not provided**, skip ADR generation. Derive and store the slug for the acceptance record in Phase 6 using the same algorithm: lowercase the task description, replace non-alphanumeric characters with hyphens, collapse consecutive hyphens, trim to 50 characters, trim trailing hyphens.
-
 ### Write Design Blueprint
 
 Write the chosen architecture blueprint to `docs/guided-dev/design-blueprint.md`. Include the full blueprint from the selected approach (with any hybrid modifications the user requested), the list of files to create/modify, and the build sequence.
 
-### Sprint Planning (`--sprints` or `--full` only)
+### Sprint Planning (medium only)
 
-**If `--sprints` or `--full` was provided:**
+**If medium mode:**
 
-Decompose the chosen blueprint into sprints:
+Decompose the chosen blueprint into sprints using automatic detection:
 
-**Automatic sprint detection** (when `--sprints` without a number):
-- ≤8 files AND ≤5 acceptance criteria: **1 sprint** (no decomposition). Announce: `"Single-pass implementation — task is small enough for one sprint."`
 - 9-15 files OR 6-8 acceptance criteria: **2-3 sprints**.
 - \>15 files OR >8 acceptance criteria: **3-5 sprints**.
-- If `--sprints N` was provided with a number, use N regardless of the above.
 
 For each sprint, produce a sprint contract and write it to `docs/guided-dev/sprint-contract-NN.md` (NN = zero-padded sprint number starting at 01):
 
@@ -234,7 +245,73 @@ For each sprint, produce a sprint contract and write it to `docs/guided-dev/spri
 
 Present all sprint contracts to the user for review. The user can request changes (reorder, merge, split, adjust scope). Announce: `"Sprint contracts ready. Does this breakdown look right, or would you like to adjust?"` Wait for confirmation before proceeding.
 
-**Otherwise (default — no sprints):** Skip sprint planning. Implementation will proceed as a single pass.
+**If small mode:** Skip sprint planning. Implementation will proceed as a single pass.
+
+---
+
+## Phase 3.5 — Design Evaluation
+
+Announce: `"## Phase 3.5 — Design Evaluation"`
+
+Read `docs/guided-dev/intake-summary.md`, `docs/guided-dev/exploration-summary.md`, and `docs/guided-dev/design-blueprint.md`.
+
+**If small mode — orchestrator checklist:**
+
+Evaluate the chosen design against these checks. No agent dispatch needed.
+
+1. **AC coverage:** For each acceptance criterion, identify which part of the design addresses it. Flag any criterion not clearly covered.
+2. **Integration risk:** Based on the exploration summary, are there existing patterns or subsystems the design interacts with that could cause friction?
+3. **Edge cases:** Are there obvious edge cases (empty states, error paths, concurrent access) not addressed?
+4. **Scope proportionality:** Is the design proportional to the task, or does it introduce unnecessary abstraction?
+
+**If medium mode — evaluator agent:**
+
+Dispatch a single evaluator agent using the `Agent` tool (subagent_type: `feature-dev:code-reviewer`) with this prompt:
+
+> "You are reviewing an architecture design, not code. Evaluate this design against the acceptance criteria and codebase context. Be skeptical — your job is to find gaps, not praise the design.
+>
+> Check:
+> 1. Does every acceptance criterion have a clear implementation path in the design?
+> 2. Are there integration risks with existing code patterns found during exploration?
+> 3. Are edge cases covered (empty states, error paths, concurrent access)?
+> 4. Is the scope proportional to the task, or does it over-engineer?
+> 5. Are there simpler alternatives the architect missed?
+>
+> Return a list of issues found with suggested fixes, or explicitly state 'No issues found' if the design is sound."
+
+The agent receives: the full intake summary, exploration summary, and chosen design blueprint.
+
+**For all modes:**
+
+Write evaluation results to `docs/guided-dev/design-evaluation.md`:
+
+```
+# Design Evaluation
+
+## Checklist
+| # | Check | Status | Notes |
+|---|-------|--------|-------|
+| 1 | AC coverage | PASS/FAIL | <details> |
+| 2 | Integration risk | PASS/FAIL | <details> |
+| 3 | Edge cases | PASS/FAIL | <details> |
+| 4 | Scope proportionality | PASS/FAIL | <details> |
+
+## Issues Found
+- <issue description and suggested fix> (or "None")
+
+## Result
+Proceed / Revise design
+```
+
+**CONDITIONAL GATE — only stops if issues are found:**
+
+If all checks pass: Announce `"Design evaluation passed. Proceeding to implementation."` and continue to Phase 4.
+
+If issues are found: Present them to the user with suggested fixes. The user can:
+- Request design changes (loop back to Phase 3 architect or make targeted edits to the blueprint)
+- Accept the design as-is and proceed
+
+Update `docs/guided-dev/design-evaluation.md` with the final result.
 
 ---
 
@@ -244,7 +321,7 @@ Announce: `"## Phase 4 — Implement"`
 
 Read `docs/guided-dev/intake-summary.md`, `docs/guided-dev/exploration-summary.md`, and `docs/guided-dev/design-blueprint.md` to load the full context for implementation.
 
-**If sprint contracts exist** (i.e., `--sprints` or `--full` was provided and more than 1 sprint was planned):
+**If medium mode and sprint contracts exist:**
 
 ### Sprint Loop
 
@@ -266,7 +343,7 @@ After all sprints complete:
 - Run the full test suite to ensure nothing was broken across sprints. Fix any regressions.
 - Briefly summarize overall implementation: which files were created/modified and the key changes in each.
 
-**Otherwise (default — single-pass implementation):**
+**Otherwise (small mode or medium without sprints — single-pass implementation):**
 
 Execute the chosen plan:
 
@@ -287,10 +364,6 @@ Write the implementation summary to `docs/guided-dev/implementation-summary.md`.
 ## Phase 5 — Review
 
 Announce: `"## Phase 5 — Review"`
-
-**If `--skip-review` was provided:** Skip this phase entirely. Announce: `"Skipping code review (--skip-review). Moving to verification."` and proceed to Phase 6.
-
-Otherwise:
 
 ### 0. Start Dev Server (if applicable)
 
@@ -314,21 +387,21 @@ Filter to only files that currently exist on disk. If the list is empty, announc
 
 ### 2. Dispatch Code Reviewers
 
-**If `--full` was provided:**
+**If medium mode:**
 
 Dispatch 3 code-reviewer agents in parallel using the `Agent` tool — each with a different focus area:
 
 - **Agent 1 (Simplicity):** "Review the following changed files for simplicity, DRY violations, unnecessary complexity, and code elegance. Focus only on the listed files."
-- **Agent 2 (Correctness):** "Review the following changed files for bugs, logic errors, race conditions, null/undefined handling, security vulnerabilities, and functional correctness. Focus only on the listed files."
+- **Agent 2 (Correctness):** "Review the following changed files for bugs, logic errors, race conditions, null/undefined handling, security vulnerabilities, and functional correctness. Focus only on the listed files." If a dev server is running, add to this agent's prompt: "A dev server is running at [URL]. Use Playwright MCP tools to navigate the application, interact with UI elements, submit forms, and verify that the implemented features work correctly. Test happy paths and error paths. Report any behavioral issues you discover alongside code-level findings."
 - **Agent 3 (Conventions):** "Review the following changed files for project convention compliance, naming consistency, abstraction quality, and adherence to CLAUDE.md guidelines. Focus only on the listed files."
 
-**Otherwise (default — single agent):**
+**If small mode:**
 
-Dispatch 1 code-reviewer agent using the `Agent` tool with a combined prompt: "Review the following changed files for simplicity, DRY violations, correctness, bugs, logic errors, race conditions, null/undefined handling, security vulnerabilities, project convention compliance, naming consistency, and adherence to CLAUDE.md guidelines. Focus only on the listed files."
+Dispatch 1 code-reviewer agent using the `Agent` tool with a combined prompt: "Review the following changed files for simplicity, DRY violations, correctness, bugs, logic errors, race conditions, null/undefined handling, security vulnerabilities, project convention compliance, naming consistency, and adherence to CLAUDE.md guidelines. Focus only on the listed files." If a dev server is running, add: "A dev server is running at [URL]. Use Playwright MCP tools to navigate the application, interact with UI elements, and verify that the implemented features work correctly. Test happy paths and error paths. Report any behavioral issues alongside code-level findings."
 
 **For all modes:**
 
-Each agent prompt must include: the list of changed files, instruction to use confidence threshold >= 80, and the dev server URL if one was started in step 0.
+Each agent prompt must include: the list of changed files and instruction to use confidence threshold >= 80.
 
 ### 3. Consolidate Findings
 
@@ -355,16 +428,14 @@ Wait for the user's response and act accordingly.
 **If only MINOR/SUGGESTION findings or none:**
 Announce: `"Code review passed. Proceeding to verification."` and continue to Phase 6.
 
-### 5. Iteration Loop (`--max-iterations` > 1 only)
-
-**If `--max-iterations` > 1** (set explicitly or via `--full`):
+### 5. Iteration Loop
 
 After fixes are applied from step 4:
 
 1. Re-run the relevant tests to confirm fixes.
 2. Update `docs/guided-dev/implementation-summary.md` with the fixes applied.
 3. Re-dispatch code reviewers (same mode as step 2) on **only the newly changed files** from the fix.
-4. If new CRITICAL/MAJOR findings emerge, return to step 4 (Handle Findings). Repeat until no new issues or the iteration count reaches `--max-iterations`.
+4. If new CRITICAL/MAJOR findings emerge, return to step 4 (Handle Findings). Repeat until no new issues or the iteration count reaches the auto-scaled maximum (small: 2, medium: 3, hard cap: 5).
 5. Write the iteration history to `docs/guided-dev/iteration-log.md`:
 
         # Iteration Log
@@ -377,8 +448,6 @@ After fixes are applied from step 4:
         ## Iteration 2
         ...
 
-**Otherwise (default — `--max-iterations 1`):** After fixes are applied, proceed directly to Phase 6 without re-review.
-
 ---
 
 ## Phase 6 — Verify
@@ -390,7 +459,8 @@ Invoke the `verify` skill using the `Skill` tool.
 The verify skill will:
 1. Retrieve acceptance criteria from the intake phase
 2. Check each criterion against the implementation with concrete evidence (including test results from Phase 4)
-3. Produce a pass/fail checklist
+3. For UI-facing criteria when a dev server is running, use Playwright MCP to demonstrate each criterion via live interaction and capture screenshots as evidence
+4. Produce a pass/fail checklist
 
 **CONDITIONAL GATE — only stops if failures are found:**
 
@@ -419,7 +489,7 @@ After the verification loop fully resolves (all criteria pass, or the user accep
 
     | # | Criterion | Status | Evidence |
     |---|-----------|--------|----------|
-    | 1 | <criterion text> | PASS | <file:line, test output, or config reference> |
+    | 1 | <criterion text> | PASS | <file:line, test output, Playwright screenshot, or config reference> |
     | 2 | <criterion text> | FAIL | <explanation of remaining state> |
 
 Use the *final* verification state after all re-verify cycles — not the first pass. If fixes were applied and re-verified, reflect the post-fix status. If some criteria FAIL and the user accepts the remaining state, write the record with FAIL statuses preserved.
@@ -449,7 +519,7 @@ Otherwise, create a pull request:
      - Acceptance criteria checklist (with checkmarks for verified items)
      - Testing summary
      - Artifacts generated (with file paths):
-       - ADR: `docs/adr/NNNN-<slug>.md` (`--full` only)
+       - ADR: `docs/adr/NNNN-<slug>.md` (medium mode only)
        - Acceptance Record: `docs/acceptance/NNNN-<slug>.md`
        - Workflow artifacts: `docs/guided-dev/`
 4. Report the PR URL to the user.
@@ -465,12 +535,13 @@ After the final phase, output:
 
 ### Summary
 - **Task:** <brief task description>
+- **Complexity:** <small / medium>
 - **Phases completed:** <list of phases run>
 - **Acceptance criteria:** <N/N passed>
 - **Tests:** <passed/failed/skipped>
-- **Code review:** <passed / N issues fixed / skipped>
+- **Code review:** <passed / N issues fixed> (N iterations)
 - **PR:** <URL or "skipped">
-- **ADR:** <path or "n/a (default mode)">
+- **ADR:** <path or "n/a (small mode)">
 - **Acceptance record:** <path>
 - **Workflow artifacts:** `docs/guided-dev/`
 
