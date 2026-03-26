@@ -49,6 +49,27 @@ Each criterion must be phrased as a verifiable statement (e.g., "The /users endp
 
 Incorporate any changes the user requests. If they make changes, present the updated list and ask again until they confirm. Only proceed once the user approves the final list.
 
+### 2b. Testability Gate
+
+After the user approves the acceptance criteria, evaluate each criterion for verifiability. A criterion is verifiable if it can be confirmed with at least one of: a test result, a file:line reference, a CLI output, or a Playwright interaction.
+
+For each criterion that is not clearly verifiable, flag it and suggest a concrete alternative:
+
+> I noticed some acceptance criteria may be hard to verify with concrete evidence. Here are suggested refinements:
+>
+> - **Original:** "<vague criterion>"
+>   **Suggested:** "<concrete, testable version>"
+> - ...
+>
+> These are suggestions — you can accept, modify, or keep the originals. Want me to update the criteria?
+
+**Examples of transformations:**
+- "Should be performant" → "API responds in < 500ms for typical payloads"
+- "Error handling should work" → "Invalid input returns a 400 response with a descriptive error message"
+- "UI should look good" → "Component renders without layout shift and matches the existing design system spacing"
+
+This gate advises but does not block — if the user insists on keeping a vague criterion, respect their decision and proceed. Update the criteria list if the user accepts changes.
+
 ### 3. Collect Supporting Materials
 
 Ask the user:
