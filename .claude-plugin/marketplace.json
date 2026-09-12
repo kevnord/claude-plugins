@@ -34,6 +34,19 @@
       "category": "workflow",
       "keywords": ["workflow", "agents", "development", "exploration", "architecture", "code-review"],
       "tags": ["workflow", "dev-process", "agents"]
+    },
+    {
+      "name": "statusline",
+      "source": "./plugins/statusline",
+      "description": "A configurable Claude Code status line: model and effort, context and usage meters, git and Jira state, PR and plugin-drift alerts",
+      "version": "1.0.0",
+      "author": {
+        "name": "kevnord"
+      },
+      "license": "MIT",
+      "category": "productivity",
+      "keywords": ["statusline", "status-line", "terminal", "usage", "budget", "git", "jira"],
+      "tags": ["statusline", "productivity"]
     }
   ]
 }

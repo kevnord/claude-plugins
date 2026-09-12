@@ -16,6 +16,12 @@ A curated marketplace of [Claude Code](https://docs.anthropic.com/en/docs/claude
 |--------|-------------|----------|---------|
 | [guided-dev](plugins/guided-dev/) | Structured development workflow with intake, clarification, planning, implementation, verification, and PR creation | `/guided-dev` | 2.3.1 |
 
+### Productivity
+
+| Plugin | Description | Commands | Version |
+|--------|-------------|----------|---------|
+| [statusline](plugins/statusline/) | A configurable status line — model and effort, context and usage meters, git and Jira state, PR and plugin-drift alerts | `/statusline` | 1.0.0 |
+
 > More plugins coming soon. [Submit yours!](CONTRIBUTING.md)
 
 ## Installation

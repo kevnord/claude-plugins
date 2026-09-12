@@ -1,0 +1,5 @@
+{
+  "name": "statusline",
+  "description": "A configurable Claude Code status line: model and effort, context and usage meters, git and Jira state, PR and plugin-drift alerts",
+  "version": "1.0.0"
+}
