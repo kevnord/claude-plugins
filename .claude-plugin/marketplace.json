@@ -47,6 +47,19 @@
       "category": "productivity",
       "keywords": ["statusline", "status-line", "terminal", "usage", "budget", "git", "jira"],
       "tags": ["statusline", "productivity"]
+    },
+    {
+      "name": "skim-colors",
+      "source": "./plugins/skim-colors",
+      "description": "Colours Claude's replies in the terminal so they're easier to skim: labels, identifiers, code, figures and warnings",
+      "version": "0.1.0",
+      "author": {
+        "name": "kevnord"
+      },
+      "license": "MIT",
+      "category": "interface",
+      "keywords": ["terminal", "colors", "readability", "ui", "hooks"],
+      "tags": ["interface", "readability"]
     }
   ]
 }

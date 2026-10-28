@@ -22,6 +22,12 @@ A curated marketplace of [Claude Code](https://docs.anthropic.com/en/docs/claude
 |--------|-------------|----------|---------|
 | [statusline](plugins/statusline/) | A configurable status line — model and effort, context and usage meters, git and Jira state, PR and plugin-drift alerts | `/statusline` | 1.0.0 |
 
+### Interface
+
+| Plugin | Description | Commands | Version |
+|--------|-------------|----------|---------|
+| [skim-colors](plugins/skim-colors/) | Colours Claude's replies in the terminal (labels, identifiers, code, figures, warnings) so they're easier to skim | none (a hooks module) | 0.1.0 |
+
 > More plugins coming soon. [Submit yours!](CONTRIBUTING.md)
 
 ## Installation
